@@ -1,0 +1,113 @@
+<div class="form-group">
+  <h2 class="text-center mb-5" style="color: darkred;">Customer Page</h2>
+
+  <div>
+    <button class="btn btn-outline-primary" type="submit" (click)="Create()">Create New Request</button>
+   
+    <button style = "margin-left: 58px;" class="btn btn-outline-primary" type="submit" (click)="View()">View Requests</button>
+  </div>
+  <!-- <div>
+    <button class="btn btn-outline-primary" type="submit" (click)="View()">View Requests</button>
+
+  </div> -->
+  <br>
+  <br>
+  <div *ngIf="viewcreaterequestdiv;else other_content">
+    <form>
+      <div class="form-group">
+        <h2 class="text-center mb-5">Create Request</h2>
+        <label for="exampleFormControlInput1">Description</label>
+        <input type="text" [(ngModel)]="CreateRequestModel.Description" [ngModelOptions]="{standalone: true}"
+          class="form-control" id="exampleFormControlInput1" placeholder="Title of the Request">
+      </div>
+      <br>
+      <div>
+        <label for="exampleFormControlInput1">Type</label>
+        <select class="form-select" [(ngModel)]="CreateRequestModel.Type" [ngModelOptions]="{standalone: true}">
+          <option selected>Select Category</option>
+          <option value="Application Request">Application Request</option>
+          <option value="IT Request">IT Request</option>
+          <option value="Asset Request">Assets Request</option>
+        </select>
+      </div>
+      <br>
+      <div>
+        <label for="exampleFormControlInput1">Status</label>
+        <select class="form-select" [(ngModel)]="CreateRequestModel.Status" [ngModelOptions]="{standalone: true}">
+          <option selected>Select Category</option>
+          <option value="Completed">Completed</option>
+          <option value="Pending">Pending</option>
+          <option value="Not Started">Not Started</option>
+          <option value="In-Progress">In-Progress</option>
+        </select>
+      </div>
+      <br>
+      <div class="mb-3">
+        <label for="exampleInputdob" class="form-label">Date</label>
+        <input type="date" [min]="tomorrow" [(ngModel)]="CreateRequestModel.Date" class="form-control"
+          [ngModelOptions]="{standalone: true}" id="date">
+        <!-- <input type="date" min="{{CurrentDate | date:'yyyy-MM-dd'}}" [(ngModel)]="CreateRequestModel.Date" class="form-control" [ngModelOptions]="{standalone: true}" id="date" > -->
+
+      </div>
+      <div>
+        <div *ngIf="updateFlag;else button_content">
+          <button class="btn btn-outline-primary" type="submit" (click)="update()">Update</button>
+      </div>
+      
+      <ng-template #button_content>
+        <button class="btn btn-outline-primary" type="submit" (click)="Submit()">Submit</button>
+      </ng-template>
+        
+
+      </div>
+
+    </form>
+  </div>
+  <ng-template #other_content>
+
+    <label for="exampleFormControlInput1">Search Existing Request</label>
+    <input type="text" [(ngModel)]="CreateRequestModel.Id" class="form-control" id="exampleFormControlInput1" placeholder="Service Request ID">
+    <br>
+    <button class="btn btn-outline-primary" type="submit" (click)="Search()">Search</button>
+    <div class="container mt-4">
+      <table id="excel-table" class="table-responsive" style="width:100%;">
+        <thead>
+          <tr style="width:100%;border: 1px solid black; text-align: center;">
+            <th scope="col">Service request id</th>
+            <th scope="col">Description</th>
+            <th scope="col">Type</th>
+            <th scope="col">Status</th>
+            <th scope="col">Date</th>
+            <th scope="col">Action#</th>
+            <th scope="col">Action#</th>
+          </tr>
+        </thead>
+        <tbody style="text-align:center;">
+
+          <tr *ngFor="let request of CreateRequestModels ">
+            <td>{{request.Id}} </td>
+            <td>{{request.Description}} </td>
+            <td>{{request.Type}}</td>
+            <td>{{request.Status}}</td>
+            <td>{{request.Date}}</td>
+            <td>
+              <button class="btn btn-info mb-1 mt-1" title="Edit" data-toggle="tooltip" (click)="EditGrid(request)">Edit</button>
+             
+            </td>
+            <td> <button class="btn btn-danger mb-1 mt-1" title="delete" data-toggle="tooltip" (click)="DeleteGrid(request)">Delete</button>
+            </td>
+            <td *ngIf="request.Status == 'Completed'">
+              
+              <button class="btn btn-info mb-1 mt-1" title="Edit" data-toggle="tooltip" (click)="Reopen(request)">Re-Open</button>
+             
+            </td>
+
+
+
+          </tr>
+        </tbody>
+
+      </table>
+      <button class="btn btn-outline-primary" type="submit" (click)="exportexcel()">Export To Excel</button>
+    </div>
+  </ng-template>
